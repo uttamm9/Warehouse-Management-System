@@ -1,0 +1,280 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../desktop/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String
+  email        String        @unique
+  password     String
+  role         Role          @relation(fields: [roleId], references: [id])
+  roleId       String        @db.Uuid
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+}
+
+model Role {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @unique // ADMIN, MANAGER, STAFF
+  users       User[]
+  permissions Permission[]
+}
+
+model Category {
+  id            String        @id @default(uuid()) @db.Uuid
+  name          String        @unique // Mechanical, Electrical, etc.
+  isActive      Boolean       @default(true)
+  subcategories SubCategory[]
+  skus          SKU[]
+  createdAt     DateTime      @default(now())
+}
+
+model SubCategory {
+  id         String   @id @default(uuid()) @db.Uuid
+  name       String
+  isActive   Boolean  @default(true)
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @db.Uuid
+  skus       SKU[]
+  createdAt  DateTime @default(now())
+}
+
+model SKU {
+  id            String      @id @default(uuid()) @db.Uuid
+  skuCode       String      @unique
+  productName   String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  categoryId    String      @db.Uuid
+  subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
+  subCategoryId String      @db.Uuid
+
+  // Dimensions in mm, Weight in kg
+  length Float @default(0)
+  width  Float @default(0)
+  height Float @default(0)
+  weight Float @default(0)
+
+  // Barcode information
+  barcode       String? @unique // Unique barcode value
+  barcodeFormat String  @default("CODE128") // Format: CODE128, EAN13, etc.
+
+  stock        Int           @default(0)
+  rackLocation String?
+  createdAt    DateTime      @default(now())
+  inventories  Inventory[]
+  transactions Transaction[]
+  billings     Billing[]
+}
+
+model Rack {
+  id      String  @id @default(uuid()) @db.Uuid
+  name    String  @unique // e.g., S1-R01
+  room    Room
+  shelves Shelf[]
+}
+
+enum Room {
+  Room1
+  Room2
+  Cabin
+}
+
+model Shelf {
+  id     String @id @default(uuid()) @db.Uuid
+  rack   Rack   @relation(fields: [rackId], references: [id])
+  rackId String @db.Uuid
+  level  Level // A, B, C, D
+
+  // Constrains
+  maxVolume Float // e.g., 1500 * 450 * 2400 (mm^3)
+  maxWeight Float // e.g., 100 kg
+
+  // Current Status
+  usedVolume Float @default(0)
+  usedWeight Float @default(0)
+
+  inventories Inventory[]
+}
+
+enum Level {
+  A
+  B
+  C
+  D
+}
+
+model Inventory {
+  id       String  @id @default(uuid()) @db.Uuid
+  sku      SKU     @relation(fields: [skuId], references: [id])
+  skuId    String  @db.Uuid
+  shelf    Shelf   @relation(fields: [shelfId], references: [id])
+  shelfId  String  @db.Uuid
+  quantity Int
+  qrCode   String? @unique // QR Data representation
+}
+
+model Transaction {
+  id           String   @id @default(uuid()) @db.Uuid
+  type         TxType // INWARD | OUTWARD
+  sku          SKU      @relation(fields: [skuId], references: [id])
+  skuId        String   @db.Uuid
+  quantity     Int
+  rackLocation String? // e.g., "S1-R01-LA"
+  status       String   @default("success") // success | failed | pending
+  timestamp    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id])
+  userId       String?  @db.Uuid
+
+  // Barcode information for inward placements
+  barcodeValue     String? // Full barcode string, e.g., "BC-SKU1001-S1-R01-LA-1714200000000"
+  barcodeNumber    String? @unique // Short unique code, e.g., "BC-20260427-A3X9K"
+  barcodeImageData String? // Base64-encoded barcode image data
+
+  @@index([timestamp])
+  @@index([type])
+  @@index([barcodeNumber])
+}
+
+enum TxType {
+  INWARD
+  OUTWARD
+}
+
+model Billing {
+  id            String @id @default(uuid()) @db.Uuid
+  invoiceId     String @unique
+  orderId       String
+  sku           SKU    @relation(fields: [skuId], references: [id])
+  skuId         String @db.Uuid
+  productName   String
+  rackHistory   String
+  duration      Int
+  weightCharges Float
+  rackCharges   Float
+  amount        Float
+  status        String
+  date          String
+
+  // New fields
+  gstPercent    Float?    @default(0)
+  companyName   String?
+  companyGst    String?
+  companyAddr   String?
+  companyEmail  String?
+  companyPhone  String?
+  customerName  String?
+  customerGst   String?
+  customerAddr  String?
+  customerEmail String?
+  customerPhone String?
+  customerId    String?   @db.Uuid
+  customer      Customer? @relation(fields: [customerId], references: [id])
+}
+
+model Customer {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String    @unique
+  gstNumber String?
+  address   String
+  email     String?
+  phone     String?
+  createdAt DateTime  @default(now())
+  billings  Billing[]
+}
+
+model CompanySetting {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  gstin     String
+  address   String
+  email     String?
+  phone     String?
+  createdAt DateTime @default(now())
+}
+
+model Module {
+  id          String       @id @default(uuid()) @db.Uuid
+  name        String       @unique
+  permissions Permission[]
+}
+
+model Permission {
+  id        String  @id @default(uuid()) @db.Uuid
+  role      Role    @relation(fields: [roleId], references: [id])
+  roleId    String  @db.Uuid
+  module    Module  @relation(fields: [moduleId], references: [id])
+  moduleId  String  @db.Uuid
+  canView   Boolean @default(false)
+  canCreate Boolean @default(false)
+  canEdit   Boolean @default(false)
+  canDelete Boolean @default(false)
+
+  @@unique([roleId, moduleId])
+}
+
+// System Logs for Audit Trail
+model SystemLog {
+  id        String    @id @default(uuid()) @db.Uuid
+  timestamp DateTime  @default(now())
+  user      LogUser
+  action    LogAction
+  item      String // SKU code like SKU-1001
+  details   String // Description/context
+  status    LogStatus @default(info)
+
+  // PLC-specific fields
+  plcOperation String? // 'SENSOR_ON', 'SENSOR_OFF', 'READ', 'WRITE', etc.
+  plcAddress   Int? // Modbus address
+  plcValue     String? // Value written/read (stored as string)
+  rackId       String? // Rack identifier for sensor operations
+
+  createdAt DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([user])
+  @@index([action])
+  @@index([status])
+  @@index([rackId]) // For filtering by rack
+  @@index([plcOperation]) // For filtering by PLC operation type
+}
+
+enum LogUser {
+  Admin
+  Manager
+  System
+  Operator1
+  Operator2
+}
+
+enum LogAction {
+  ConfigChanged
+  BackupCompleted
+  ScannedQRCode
+  StartedConveyor
+  UpdatedSKUDetails
+  PlacedOnRack
+  UserLogin
+  RemovedFromRack
+  GeneratedInvoice
+  RackCapacityWarning
+  StoppedConveyor
+  EmergencyStopActivated
+  SensorActivated
+  SensorDeactivated
+  SensorActivationFailed
+  SensorDeactivationFailed
+  PLCCommunicationError
+}
+
+enum LogStatus {
+  success
+  error
+  warning
+  info
+}

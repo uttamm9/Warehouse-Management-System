@@ -1,0 +1,1249 @@
+:root {
+  --primary-color: #61dafb;
+  --bg-color: #282c34;
+  --text-color: #ffffff;
+  --card-bg: #333842;
+  --btn-hover: #4fa8cc;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  user-select: none;
+  /* Good for desktop apps to prevent text selection */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.app-header h1 {
+  font-size: 3rem;
+  margin: 0;
+  background: linear-gradient(90deg, #61dafb, #d44dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+.card {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+button {
+  font-size: 1rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.1s ease, background-color 0.2s;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.primary-btn {
+  background-color: var(--primary-color);
+  color: #20232a;
+}
+
+.primary-btn:hover {
+  background-color: var(--btn-hover);
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.secondary-btn:hover {
+  background-color: rgba(97, 218, 251, 0.1);
+}
+
+.info-text {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+code {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Allow selection inside specific elements if needed */
+input,
+textarea,
+.selectable {
+  user-select: text;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PLC Automation Dashboard & Subscreen Styles
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.plc-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.plc-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.plc-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.plc-page-sub {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0.25rem 0 0 0;
+}
+
+.plc-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+}
+
+.plc-dot {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.plc-dot-green {
+  background-color: #10b981;
+}
+
+.plc-dot-amber {
+  background-color: #f59e0b;
+}
+
+.plc-dot-red {
+  background-color: #ef4444;
+}
+
+.plc-dot-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: plc-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  opacity: 0.75;
+}
+
+.plc-dot-green .plc-dot-pulse {
+  background-color: #10b981;
+}
+
+.plc-dot-amber .plc-dot-pulse {
+  background-color: #f59e0b;
+}
+
+@keyframes plc-ping {
+
+  75%,
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.plc-status-text-green {
+  color: #34d399;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.plc-status-text-amber {
+  color: #fbbf24;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.plc-status-text-red {
+  color: #f87171;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* ── 4-state connection badge (Req 4.4) ─────────────────────────────────────── */
+.plc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.plc-badge-green {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.plc-badge-amber {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+}
+
+.plc-badge-red {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+}
+
+.plc-badge-grey {
+  background: rgba(100, 116, 139, 0.15);
+  border: 1px solid rgba(100, 116, 139, 0.35);
+  color: #94a3b8;
+}
+
+.plc-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.plc-badge-dot-green {
+  background-color: #10b981;
+}
+
+.plc-badge-dot-amber {
+  background-color: #f59e0b;
+}
+
+.plc-badge-dot-red {
+  background-color: #ef4444;
+}
+
+.plc-badge-dot-grey {
+  background-color: #64748b;
+}
+
+.plc-badge-dot-pulse {
+  animation: plc-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ── MOCK MODE banner (Req 12.5) ─────────────────────────────────────────────── */
+.plc-mock-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* ── Hint text ───────────────────────────────────────────────────────────────── */
+.plc-hint {
+  font-size: 0.8125rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.plc-hint-text {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.plc-error-text {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.plc-input-error {
+  border-color: #ef4444 !important;
+}
+
+.plc-input-error:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* Banners & Messages */
+.plc-banner {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.plc-banner-ok {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+}
+
+.plc-banner-err {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.plc-alarm-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(220, 38, 38, 0.2);
+  border: 1px solid rgba(220, 38, 38, 0.5);
+  color: #fca5a5;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.15);
+  margin-bottom: 0.5rem;
+}
+
+.plc-alarm-icon {
+  font-size: 1.5rem;
+}
+
+.plc-alarm-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.plc-alarm-content strong {
+  font-size: 1rem;
+  color: #fecaca;
+  margin-bottom: 0.15rem;
+}
+
+.plc-alarm-content span {
+  font-size: 0.875rem;
+}
+
+.plc-alarm-reset-btn {
+  background: #dc2626;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+}
+
+.plc-alarm-reset-btn:hover {
+  background: #b91c1c;
+}
+
+/* Custom Cards */
+.plc-card {
+  background: rgba(30, 41, 59, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.plc-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  color: #f1f5f9;
+  letter-spacing: 0.025em;
+  border-left: 3px solid #3b82f6;
+  padding-left: 0.75rem;
+}
+
+.plc-section-subtitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+/* Inputs & Form layout */
+.plc-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.plc-grid-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.plc-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.plc-input,
+.plc-select {
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #f8fafc;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.plc-input:focus,
+.plc-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.plc-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.25rem;
+}
+
+.plc-toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* Switch UI */
+.plc-switch {
+  width: 44px;
+  height: 24px;
+  background-color: #334155;
+  border-radius: 9999px;
+  padding: 2px;
+  position: relative;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.plc-switch-on {
+  background-color: #3b82f6;
+}
+
+.plc-switch-thumb {
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.plc-switch-on .plc-switch-thumb {
+  transform: translateX(20px);
+}
+
+/* Status Cards & Grid Details */
+.plc-status-card {
+  margin-top: 0.5rem;
+  border-left: 4px solid #10b981;
+}
+
+.plc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.plc-stat span {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plc-stat strong {
+  font-size: 1.125rem;
+  color: #f1f5f9;
+}
+
+/* Buttons */
+.plc-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.plc-btn {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plc-btn-primary {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.plc-btn-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.35);
+}
+
+.plc-btn-secondary {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+}
+
+.plc-btn-secondary:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.plc-btn-danger {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.plc-btn-danger:hover:not(:disabled) {
+  background-color: #dc2626;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+
+.plc-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.plc-btn-icon {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.1s, background-color 0.2s;
+}
+
+.plc-btn-icon:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: scale(1.1);
+}
+
+.plc-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  font-size: 1.125rem;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* Tag Mapping & Monitors Layout */
+.plc-tag-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.plc-table-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.plc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.plc-table th {
+  background: rgba(30, 41, 59, 0.7);
+  padding: 0.875rem 1.25rem;
+  font-weight: 600;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.plc-table td {
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.plc-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.plc-row-editing {
+  background: rgba(59, 130, 246, 0.08) !important;
+}
+
+/* Badges and Types */
+.plc-tag-type {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.badge-M {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.badge-X {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-Y {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-D {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.badge-T {
+  background: rgba(236, 72, 153, 0.15);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+
+.badge-C {
+  background: rgba(20, 184, 166, 0.15);
+  color: #2dd4bf;
+  border: 1px solid rgba(20, 184, 166, 0.3);
+}
+
+.plc-tag-dir {
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+}
+
+.dir-Read {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.dir-Write {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.dir-Read_Write {
+  background: rgba(139, 92, 246, 0.1);
+  color: #a78bfa;
+}
+
+/* Conveyor Automation Screen Styles */
+.plc-grid-main {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .plc-grid-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plc-conveyor-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.plc-conveyor-viewport {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.plc-conveyor-svg {
+  width: 100%;
+  max-height: 240px;
+}
+
+.conveyor-belt-loop {
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes conveyor-run {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -45;
+  }
+}
+
+@keyframes spin-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.plc-conveyor-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.plc-conveyor-stat {
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.plc-conveyor-stat span {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.plc-conveyor-stat strong {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+}
+
+/* Controls Operations list */
+.plc-controls-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.plc-ops-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.plc-btn-large {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.plc-btn-large:active {
+  transform: scale(0.98);
+}
+
+.plc-btn-start {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.plc-btn-start:hover:not(:disabled) {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.45);
+}
+
+.plc-btn-stop {
+  background: rgba(100, 116, 139, 0.1);
+  border: 1px solid rgba(100, 116, 139, 0.25);
+  color: #cbd5e1;
+}
+
+.plc-btn-stop:hover:not(:disabled) {
+  background: #475569;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(71, 85, 105, 0.35);
+}
+
+.plc-btn-estop {
+  background: rgba(239, 68, 68, 0.15);
+  border: 2px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  margin-top: 0.5rem;
+}
+
+.plc-btn-estop:hover:not(:disabled) {
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+  border-color: #ef4444;
+}
+
+.plc-ops-icon {
+  font-size: 1.25rem;
+}
+
+.plc-divider {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 1.25rem 0;
+}
+
+/* Speed Slider Panel */
+.plc-speed-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.plc-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plc-label-main {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.plc-slider-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.plc-speed-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #1e293b;
+  outline: none;
+  cursor: pointer;
+}
+
+.plc-speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  transition: transform 0.1s;
+}
+
+.plc-speed-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.plc-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+/* Room 1 Layout Visualization Styles */
+.plc-layout-card {
+  padding: 1rem;
+}
+
+.plc-layout-viewport {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0.5rem;
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+.plc-layout-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.plc-rack-cell-group {
+  cursor: pointer;
+}
+
+.plc-rack-rect {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.plc-rack-cell-group:hover .plc-rack-rect {
+  stroke: #60a5fa;
+  fill: #1e293b;
+  transform: translateY(-1px);
+}
+
+.plc-active-route-path {
+  stroke-dashoffset: 0;
+  animation: route-path-dash 1s linear infinite;
+}
+
+@keyframes route-path-dash {
+  to {
+    stroke-dashoffset: -15;
+  }
+}
+
+.plc-target-banner {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.plc-target-banner span {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plc-target-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #60a5fa;
+  margin: 0.25rem 0;
+  text-shadow: 0 0 10px rgba(96, 165, 250, 0.2);
+}
+
+.plc-sensor-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.plc-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+.plc-legend-item span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.plc-legend-item .dot-green {
+  background: #10b981;
+}
+
+.plc-legend-item .dot-amber {
+  background: #f59e0b;
+}
+
+.plc-route-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.plc-route-history-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+}
+
+.plc-hist-time {
+  color: #64748b;
+  font-family: monospace;
+}
+
+.plc-hist-msg {
+  color: #cbd5e1;
+  flex: 1;
+}
+
+.plc-hist-status {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+}
+
+.plc-hist-status.status-sent {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+/* Diagnostics & Monitor View Specifics */
+.plc-toolbar-card {
+  padding: 0.75rem 1.25rem;
+}
+
+.plc-toolbar-flex {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.plc-monitor-val {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+.plc-monitor-val.val-high {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+
+.plc-monitor-val.val-low {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.plc-monitor-val.val-reg {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.plc-diag-status {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.monitor-ok {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.monitor-waiting {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+}
+
+.monitor-fault {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.monitor-stale {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+/* Logs specific */
+.plc-log-type {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.log-info {
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+}
+
+.log-read {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+}
+
+.log-write {
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+
+.log-connect {
+  background: rgba(139, 92, 246, 0.1);
+  color: #a78bfa;
+}
+
+.log-disconnect {
+  background: rgba(245, 158, 11, 0.1);
+  color: #fbbf24;
+}
+
+.log-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.log-row-error {
+  background: rgba(239, 68, 68, 0.03);
+}
+
+.plc-table-wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.plc-table-wrapper::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.plc-table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.plc-table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
